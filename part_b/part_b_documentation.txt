@@ -1,0 +1,47 @@
+# MADDPG Implementation Overview
+
+## 1. MultiAgentReplayBuffer
+- **Purpose:** Stores experiences for all agents to sample during training.
+- **Key Methods:**
+  - `store_transition`: Saves current observation, action, reward, next observation, and done flag for each agent.
+  - `sample_buffer`: Returns a random batch of experiences for training.
+  - `ready`: Checks if there are enough experiences to sample a batch.
+
+## 2. CriticNetwork
+- **Purpose:** Estimates Q-values for state-action pairs in a multi-agent setting.
+- **Forward Pass:** Concatenates global state and actions of all agents, passes through 2 fully connected layers, outputs a scalar Q-value.
+
+## 3. ActorNetwork
+- **Purpose:** Produces action probabilities for a single agent given its observation.
+- **Forward Pass:** Passes observation through 2 fully connected layers and applies softmax to output action probabilities.
+
+## 4. Agent
+- **Purpose:** Represents a single MADDPG agent with actor and critic networks.
+- **Key Methods:**
+  - `choose_action`: Chooses an action based on current observation.
+  - `update_network_parameters`: Soft updates target networks using a factor `tau`.
+
+## 5. MADDPG
+- **Purpose:** Multi-agent DDPG system managing multiple agents and training.
+- **Key Methods:**
+  - `choose_action`: Collects actions from all agents for the current observations.
+  - `learn`: Performs MADDPG learning step:
+    - Updates critic using TD-targets
+    - Updates actor to maximize expected Q-value
+    - Soft updates target networks
+
+## 6. get_state_vector
+- **Purpose:** Converts a dictionary of agent observations into a list of observation vectors aligned with `agent_names`.
+
+## 7. plot_learning_curve
+- **Purpose:** Plots the training progress over episodes.
+- **Details:** Shows raw score, moving average (100 episodes), and linear regression trend line; saves plot to `maddpg_learning_curve.svg`.
+
+## 8. Main Training Loop
+- Initializes the environment, MADDPG agents, and replay buffer.
+- For each episode:
+  - Collects observations, chooses actions, steps the environment.
+  - Stores transitions in replay buffer.
+  - Periodically calls `learn` to update agents.
+  - Records and plots scores.
+

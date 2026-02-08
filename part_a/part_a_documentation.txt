@@ -1,0 +1,73 @@
+# Lunar Lander POMDP Experiment - Function Descriptions
+
+## 1. Wrapper (POMDP Logic)
+
+### `class LunarLanderPOMDPWrapper(gym.ObservationWrapper)`
+Wraps the standard `LunarLander` environment to make it partially observable (POMDP) by removing velocity components:
+- Removes `x_vel` (index 2), `y_vel` (index 3), and `ang_vel` (index 5) from observations.
+- Adjusts `observation_space` accordingly.
+- **Methods**:
+  - `__init__(env)`: Initializes the wrapper and sets the new observation space.
+  - `observation(observation)`: Returns the masked observation without velocity components.
+
+---
+
+## 2. Models (LSTM/GRU Architectures)
+
+### `class RecurrentACModel(nn.Module)`
+A recurrent actor-critic model:
+- Input → RNN (LSTM/GRU) → Actor & Critic heads.
+- **Parameters**: `input_dim`, `action_dim`, `hidden_dim`, `rnn_type`, `activation`.
+- **Methods**:
+  - `forward(x, hidden=None)`: Passes input through RNN, applies activation, returns action logits, state value, and new hidden state.
+
+### `class FeatureExtractorACModel(nn.Module)`
+Actor-critic model with a feature extraction step:
+- Input → Dense layer → RNN → Actor & Critic heads.
+- **Parameters**: `input_dim`, `action_dim`, `hidden_dim`, `rnn_type`, `activation`.
+- **Methods**:
+  - `forward(x, hidden=None)`: Extracts features with a dense layer, passes them through RNN, and outputs action logits, value, and hidden state.
+
+---
+
+## 3. Agent (Training Logic)
+
+### `class RecurrentAgent`
+Handles interaction with the environment and training of recurrent models.
+- **Parameters**: `model`, `lr`, `gamma`, `device`.
+- **Methods**:
+  - `get_action(state, hidden)`: Returns an action sampled from the policy and the new hidden state.
+  - `store_transition(state, action, reward)`: Stores a transition in memory.
+  - `update()`: Performs an actor-critic update using stored transitions; computes returns, advantage, losses, and updates model weights.
+
+---
+
+## 4. Main Experiment Runner
+
+### `def run_experiment(config)`
+Runs a single experiment with the specified configuration:
+- Creates environment and wraps it with `LunarLanderPOMDPWrapper`.
+- Instantiates the model and agent.
+- Runs training for `config['episodes']`.
+- Stores scores for each episode and prints average scores every 50 episodes.
+- Returns a list of episode scores.
+
+### `def plot_results(results)`
+Plots smoothed learning curves for multiple experiments:
+- Applies a moving average (50 episodes) for smoothing.
+- Saves the figure as `part_a_comparison.svg`.
+- Displays the plot.
+
+---
+
+## 5. Main Execution Block
+
+- Defines multiple experiment configurations with varying:
+  - RNN type (LSTM/GRU)
+  - Architecture type (`simple` or `feature`)
+  - Hidden size
+  - Learning rate
+  - Activation function
+- Runs all experiments and saves results to `part_a_results.json`.
+- Plots the results using `plot_results(results)`.
+

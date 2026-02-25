@@ -127,7 +127,7 @@ We implemented an alternative architecture where:
 
 ### Performance Comparison
 
-The **feature-extractor-first LSTM** (`lstm_arch2`) achieved the best overall performance, which outperformed the simple LSTM architecture. It performed better because:
+The **STM High Learning Rate with Tanh Activation Function** (`lstm_high_lr_tanh`) achieved the best overall performance, which outperformed the simple LSTM architecture. It performed better because:
 
 - The feed-forward layers learn useful spatial representations before temporal processing.
 - The RNN operates on a more compact and informative feature space.
@@ -142,7 +142,7 @@ The **feature-extractor-first LSTM** (`lstm_arch2`) achieved the best overall pe
 - **LSTM > GRU** for this POMDP due to superior long-term memory handling.
 - Moderate learning rates and network sizes are critical for stability.
 - Adding a feed-forward feature extractor before the RNN improves performance.
-- The best-performing model was the **LSTM with pre-RNN feature extraction**, demonstrating the importance of architectural design in recurrent reinforcement learning.
+- The best-performing model was the **LSTM High Learning Rate with Tanh Activation Function** (`lstm_high_lr_tanh`), demonstrating the importance of architectural design in recurrent reinforcement learning.
 
 # Multi-Agent DRL
 

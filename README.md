@@ -127,7 +127,7 @@ We implemented an alternative architecture where:
 
 ### Performance Comparison
 
-The **STM High Learning Rate with Tanh Activation Function** (`lstm_high_lr_tanh`) achieved the best overall performance, which outperformed the simple LSTM architecture. It performed better because:
+The **LSTM High Learning Rate with Tanh Activation Function** (`lstm_high_lr_tanh`) achieved the best overall performance, which outperformed the simple LSTM architecture. It performed better because:
 
 - The feed-forward layers learn useful spatial representations before temporal processing.
 - The RNN operates on a more compact and informative feature space.
